@@ -31,7 +31,7 @@ for item in items:
 
     #name
     bank_name = item.find('div').find('a', {'class': 'widget__link'}).text
-    bank_name = re.findall(r'\w[\w\s]+\w', bank_name)
+    bank_name = re.findall(r'\w[\D]+\w\D', bank_name)
     #print(bank_name)
 
     #money
