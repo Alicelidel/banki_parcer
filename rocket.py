@@ -29,6 +29,12 @@ for item in items:
     bank_id = re.findall(r'\s[\d]+', bank_id)
     #print(bank_id)
 
+    #http
+    bank_http = item.find('div').find('a', {'class': 'widget__link'}).get('href')
+    #print(bank_http)
+
+    #get description
+
     #name
     bank_name = item.find('div').find('a', {'class': 'widget__link'}).text
     bank_name = re.findall(r'\w[\D]+\w\D', bank_name)
@@ -41,6 +47,7 @@ for item in items:
 
     results.append({
         'bank_id': bank_id,
+        'bank_http': bank_http,
         'bank_name': bank_name,
         'bank_money': bank_money
     })
