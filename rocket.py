@@ -5,9 +5,6 @@ import re
 
 #скачиваем страницу по url
 s = requests.Session()
-s.headers.update({
-   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36'
-})
 url = 'http://www.banki.ru/banks/ratings/'
 request = s.get(url)
 with open('test.html','wb') as output_file:
