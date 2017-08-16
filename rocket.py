@@ -7,7 +7,7 @@ import re
 s = requests.Session()
 url = 'http://www.banki.ru/banks/ratings/'
 request = s.get(url)
-text = request.text.encode('cp1251')
+text = request.text
 #print(text)
 
 
@@ -56,7 +56,7 @@ for bank in results:
     #получаем ссылку для перехода на страницу банка
     desc = url + bank['bank_url']
     request = s.get(desc)
-    text = request.text.encode('cp1251')
+    text = request.text
 
     #получаем ссылку для перехода на описание
     soup = BeautifulSoup(text, 'lxml')
@@ -68,7 +68,7 @@ for bank in results:
 
     #теперь вытаскиваем описание банка по ссылке
     request = s.get(desc_url)
-    text = request.text.encode('cp1251')
+    text = request.text
     soup = BeautifulSoup(text, 'lxml')
 
     #находим ту часть страницы, в которой хранится описание. описание состоит из блоков em, которых может быть от одного и больше.
