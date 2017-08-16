@@ -45,7 +45,7 @@ for item in items:
 #выводим результаты
 print('Номер банка в рейтинге |           Финансы          |      Название банка     ')
 for result in results:
-    print(result['bank_id'],'                |  ',result['bank_money'], '     | ',result['bank_name'])
+    print(result['bank_id'][0],'                    |  ',result['bank_money'][0], '       | ',result['bank_name'][0])
 
 #получаем описание каждого банка по ссылке
 for bank in results:
