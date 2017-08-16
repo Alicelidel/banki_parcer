@@ -7,7 +7,7 @@ import re
 s = requests.Session()
 url = 'http://www.banki.ru/banks/ratings/'
 request = s.get(url)
-text = request.text.encode('cp1251')
+text = request.text
 print(text)
 
 
