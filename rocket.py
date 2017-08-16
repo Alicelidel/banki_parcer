@@ -2,14 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from get_desc import get_desc
-
+from settings import BASE_URL, resource
 
 #скачиваем страницу по url
 s = requests.Session()
-url = 'http://www.banki.ru/banks/ratings/'
-request = s.get(url)
+#BASE_URL = 'http://www.banki.ru'
+resource = '/banks/ratings/'
+request = s.get(BASE_URL + resource)
 text = request.text
-#print(text)
 
 
 #парсинг скачанной страницы
@@ -17,6 +17,7 @@ results = []
 soup = BeautifulSoup(text, 'lxml')
 bank_list = soup.find('table', {'class': 'standard-table standard-table--row-highlight margin-bottom-small margin-top-x-small'}).find('tbody')
 items = bank_list.find_all('tr')
+
 
 for item in items:
 
@@ -32,6 +33,7 @@ for item in items:
 
     #url
     bank_url = item.find('div').find('a', {'class': 'widget__link'}).get('href')
+    print(bank_url)
 
     #money
     bank_money = item.find('td',{'class': 'text-align-right'}).text
@@ -53,5 +55,5 @@ for result in results:
 
 #получаем описание каждого банка по ссылке
 for bank in results:
-        bank['bank_desc'] = get_desc(url, bank['bank_url'])
+        bank['bank_desc'] = get_desc(BASE_URL, resource, bank['bank_url'])
         print(bank['bank_desc'])
