@@ -7,18 +7,16 @@ import re
 s = requests.Session()
 url = 'http://www.banki.ru/banks/ratings/'
 request = s.get(url)
-with open('test.html','wb') as output_file:
-    output_file.write(request.text.encode('cp1251'))
+text = request.text.encode('cp1251')
+print(text)
 
 
 #парсинг скачанной страницы
-text = open('test.html',mode='r')
 results = []
-
 soup = BeautifulSoup(text)
 bank_list = soup.find('table', {'class': 'standard-table standard-table--row-highlight margin-bottom-small margin-top-x-small'}).find('tbody')
 items = bank_list.find_all('tr')
-#print(items[0])
+
 for item in items:
 
     #id
