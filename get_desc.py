@@ -1,12 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
-from settings import BASE_URL, resource
+from settings import BASE_URL, RATING_RESOURCE
 
-def get_desc(BASE_URL, resource, url2):
+def get_desc(BASE_URL, RATING_RESOURCE, url2):
     """функция получения описания банка"""
     # получаем ссылку для перехода на страницу банка
     s = requests.Session()
-    desc = BASE_URL + resource + url2
+    desc = BASE_URL + RATING_RESOURCE + url2
     request = s.get(desc)
     text = request.text
 

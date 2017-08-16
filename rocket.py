@@ -2,13 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from get_desc import get_desc
-from settings import BASE_URL, resource
+from settings import BASE_URL, RATING_RESOURCE
 
 #скачиваем страницу по url
 s = requests.Session()
 #BASE_URL = 'http://www.banki.ru'
 resource = '/banks/ratings/'
-request = s.get(BASE_URL + resource)
+request = s.get(BASE_URL + RATING_RESOURCE)
 text = request.text
 
 
@@ -55,5 +55,5 @@ for result in results:
 
 #получаем описание каждого банка по ссылке
 for bank in results:
-        bank['bank_desc'] = get_desc(BASE_URL, resource, bank['bank_url'])
+        bank['bank_desc'] = get_desc(BASE_URL, RATING_RESOURCE, bank['bank_url'])
         print(bank['bank_desc'])
