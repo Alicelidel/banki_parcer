@@ -2,11 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import settings
 
-def get_desc(url2):
+def get_desc(bank_url):
     """функция получения описания банка"""
     # получаем ссылку для перехода на страницу банка
     s = requests.Session()
-    desc = settings.BASE_URL + settings.RATING_RESOURCE + url2
+    desc = settings.BASE_URL + settings.RATING_RESOURCE + bank_url
     request = s.get(desc)
     text = request.text
 
@@ -16,7 +16,6 @@ def get_desc(url2):
         'class': 'bank-page-header'}).find('a').get('href')
 
     # переходим на описание и вытаскиваем его
-    # ссылка на описание банка лежит на том же url, но от исходного url надо убрать лишнее, оставив только www.banki.ru
     desc_url = settings.BASE_URL + bank_url_to_desc
 
     # теперь вытаскиваем описание банка по ссылке
