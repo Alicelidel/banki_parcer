@@ -1,53 +1,45 @@
 import requests
-from bs4 import BeautifulSoup
-import re
-from get_desc import get_desc
+from get_info import get_desc, get_money, get_json, get_xy_for_bank, get_data, get_bank_list
 import settings
-
-#скачиваем страницу по url
-s = requests.Session()
-request = s.get(settings.BASE_URL + settings.RATING_RESOURCE)
-text = request.text
+from make_info import make_plot, make_json, make_table
 
 
-#парсинг скачанной страницы
-results = []
-soup = BeautifulSoup(text, 'lxml')
-bank_list = soup.find('table', {'class': 'standard-table standard-table--row-highlight margin-bottom-small margin-top-x-small'}).find('tbody')
-items = bank_list.find_all('tr')
+def main():
+    s = requests.Session()
+    text = s.get(settings.BASE_URL + settings.RATING_RESOURCE).text
+    results = get_data(text)
+
+    print('Таблица с финансовыми показателями первых 50 банков в рейтинге.\n')
+    make_table(results)
+
+    print('\nИнформация о всех 50 банках из рейтинга:\n')
+    for bank in results:
+            bank['bank_desc'] = get_desc(bank['bank_url'])
+            print(bank['bank_id'], bank['bank_desc'])
+
+    temp_doc = make_json(results)
+
+    #посчитаем финансы какого-то одного банка за полгода и построим график - выбираем лидера
+    #для этого необходимо перейти на страничку банка - нужно узнать hidden_id
+    bank_id = 1
+    hidden_id = results[bank_id-1]['bank_hidden_id']
+    print('Выводим финансовые показатели банка ',results[bank_id-1]['bank_name'])
+    x,y = get_xy_for_bank(hidden_id)
+    line_color = 'g' #выберем цвет линии
+    plt = make_plot(x,y,line_color)
+    plt.show()
+
+    #теперь построим график с фин. показателями топ 10 банков
+    colors = ['g','r','b','k','y','m','c','g','r','b']
+    for bank in results[:10]:
+        color = colors.pop(0)
+        hidden_id = bank['bank_hidden_id']
+        x,y = get_xy_for_bank(hidden_id)
+        plt = make_plot(x,y,color)
+    plt.show()
+
+    get_json(temp_doc)
 
 
-for item in items:
-
-    #id
-    bank_id = item.find('td', {'class': 'is-center table-title '}).text
-    bank_id = re.findall(r'\s[\d]+', bank_id)
-
-    #name
-    bank_name = item.find('div').find('a', {'class': 'widget__link'}).text
-    bank_name = re.findall(r'\w[\D]+\w\D', bank_name)
-
-    #url
-    bank_url = item.find('div').find('a', {'class': 'widget__link'}).get('href')
-
-    #money
-    bank_money = item.find('td',{'class': 'text-align-right'}).text
-    bank_money = re.findall(r'\d[\d\s]+\d', bank_money)
-
-    results.append({
-        'bank_id': bank_id,
-        'bank_name': bank_name,
-        'bank_url': bank_url,
-        'bank_money': bank_money
-    })
-
-
-#выводим результаты
-print('Номер банка в рейтинге |           Финансы          |      Название банка     ')
-for result in results:
-    print(result['bank_id'][0],'                    |  ',result['bank_money'][0], '       | ',result['bank_name'][0])
-
-#получаем описание каждого банка по ссылке
-for bank in results:
-        bank['bank_desc'] = get_desc(bank['bank_url'])
-        print(bank['bank_desc'])
+if __name__ == '__main__':
+    main()
